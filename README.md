@@ -1,77 +1,49 @@
-# 🖼️ Image Captioning with PyTorch & Transformers
+# 🖼️ Smart Image Captioning & Object Detection
 
-## 📌 Project Overview
-This project demonstrates end-to-end **image captioning** using both a custom **CNN-RNN model with Attention** and state-of-the-art **Transformer models (BLIP)**. It also integrates **YOLO object detection** to enrich captions and includes **caption humanization** for more natural language output.
-
-The complete implementation is provided in a Google Colab notebook, making it easy to explore, train, and experiment with different models.
-
----
+A hybrid deep learning project that combines **Computer Vision** and **Natural Language Processing** to generate descriptive captions for images. This repository implements multiple architectures—from custom CNN-RNN models with Attention to state-of-the-art Transformers—and integrates Object Detection for enhanced context.
 
 ## 🚀 Key Features
 
-### 🧠 Deep Learning Captioning Models
-- **CNN-RNN Encoder-Decoder with Attention**
-  - Flexible CNN Encoders: *ResNet*, *EfficientNet*, *ConvNeXt*
-  - RNN Decoder: *LSTM* or *GRU*
-  - Bahdanau-style additive attention
+* **Multi-Model Approach**:
+    * **Custom CNN-RNN**: Uses **ResNet50** (encoder) and **LSTM/GRU with Attention** (decoder) to generate captions from scratch.
+    * **Transformer Power**: Integrates **BLIP** (Bootstrapping Language-Image Pre-training) for high-fidelity captioning.
+* **Object Detection Integration**: Utilizes **YOLOv8** to detect and list objects within the image, providing granular scene understanding.
+* **Human-Like Text**: Includes a post-processing pipeline using **GPT-2** to "humanize" and refine generated captions for better grammar and flow.
+* **Interactive UI**: Features a built-in GUI (using `ipywidgets`) allowing users to upload images, view predictions, and manually edit captions with smart suggestions.
 
-- **Transformer Model (BLIP)**
-  - Integrates `Salesforce/blip-image-captioning-base` via Hugging Face
-  - High-quality captions out-of-the-box
+## 🛠️ Tech Stack
 
-### 👁️ Object-Aware Captioning
-- **YOLOv8 (yolov8n.pt)** detects prominent image objects
-- Detected objects help refine captions and provide suggestion prompts
+* **Deep Learning Framework**: PyTorch
+* **Encoders**: ResNet50, EfficientNet, ConvNeXt
+* **Decoders**: LSTM, GRU, Transformer (BLIP)
+* **Object Detection**: Ultralytics YOLOv8
+* **NLP**: Hugging Face Transformers (GPT-2, BERT tokenizer)
+* **Dataset**: Flickr8k
+* **Tools**: NumPy, Pandas, Matplotlib, PIL
 
-### 🧩 Additional Enhancements
-- Caption humanization with rule-based text polishing
-- Smart word suggestions based on detected objects + caption context
-- Custom vocabulary management for CNN-RNN model tokenization
+## 📂 Project Structure
 
-### 📚 Dataset & Evaluation
-- Training supported with **Flickr8k** dataset (`datasets` library)
-- Includes **BLEU score** and **precision** evaluation metrics
+The notebook is organized into the following modules:
 
----
+1.  **Data Loading & Preprocessing**:
+    * Loads the Flickr8k dataset.
+    * Builds a vocabulary from training captions.
+    * Applies image transforms (Resize, Crop, Normalize).
+2.  **Model Architectures**:
+    * **Encoder**: Extracts feature vectors from images.
+    * **Attention Mechanism**: Focuses on specific image regions during text generation.
+    * **Decoder**: Generates caption sequences word-by-word.
+3.  **Training Loop**:
+    * Implements CrossEntropyLoss and AdamW optimizer.
+    * Includes validation phases to monitor performance.
+4.  **Inference & UI**:
+    * Beam Search implementation for better caption generation.
+    * Interactive widget for real-time testing.
 
-## 🛠️ Setup & Installation
+## 📦 Installation
 
-1. **Open in Google Colab**
-   - Upload the notebook or click the “Open in Colab” badge (if included)
+To run this notebook locally or on Colab, ensure you have the required dependencies:
 
-2. **Install Dependencies**
-   Run the first code cell to install:
-   - `torch`, `torchvision`, `transformers`, `ultralytics`
-   - `datasets`, `nltk`, `ipywidgets`, and more
+```bash
+pip install torch torchvision transformers ultralytics datasets ipywidgets nltk matplotlib
 
-3. **Restart Kernel** *(Important!)*
-
-Required to correctly load newly installed packages
-
-4. **NLTK Setup**
-- `punkt` tokenizer is downloaded automatically during execution
-
----
-
-## ▶️ Usage Instructions
-
-1. **Run All Cells**
-This will:
-- Load and preprocess dataset
-- Initialize `Vocabulary`, CNN-RNN and BLIP models
-- Train models (optional — BLIP works pre-trained)
-- Activate the image upload widget
-
-2. **Generate Captions Interactively**
-- Upload an image using the UI widget
-- The notebook will:
-  - Display the image
-  - Generate captions from both BLIP and CNN-RNN
-  - Show humanized caption variants
-  - Display YOLO-detected objects
-  - Provide smart suggestions for improving captions
-
-3. **Test Humanization Module**
-You may call:
-```python
-test_humanize_captions()
